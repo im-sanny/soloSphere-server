@@ -2,7 +2,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
-const port = process.env.PORT || 6000
+const port = process.env.PORT || 9000
 
 const app = express()
 const corsOptions ={
@@ -24,8 +24,14 @@ const client = new MongoClient(uri, {
   });
   async function run() {
     try {
-     
+     const jobsCollection = client.db('soloSphereDB').collection('jobs')
+     const bidsCollection = client.db('soloSphereDB').collection('bids')
       
+    //  get all jobs data from db
+    app.get('/jobs', async(req, res) =>{
+      const result = await jobsCollection.find().toArray()
+      res.send(result)
+    })
      
       await client.db("admin").command({ ping: 1 });
       console.log("Pinged your deployment. You successfully connected to MongoDB!");
