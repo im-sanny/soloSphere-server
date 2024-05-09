@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
@@ -26,10 +26,20 @@ const client = new MongoClient(uri, {
     try {
      const jobsCollection = client.db('soloSphereDB').collection('jobs')
      const bidsCollection = client.db('soloSphereDB').collection('bids')
+
+     
       
     //  get all jobs data from db
     app.get('/jobs', async(req, res) =>{
       const result = await jobsCollection.find().toArray()
+      res.send(result)
+    })
+
+    //get a single job data from db using id
+    app.get('/job/:id', async(req, res)=>{
+      const id = req.params.id
+      const query = {_id: new ObjectId(id)}
+      const result = await jobsCollection.findOne(query)
       res.send(result)
     })
      
